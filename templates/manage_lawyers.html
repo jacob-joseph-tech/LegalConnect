@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">Manage Lawyers</h2>
+
+<div class="row">
+{% for l in lawyers %}
+<div class="col-md-6 mb-3">
+<div class="card p-4">
+
+<h5>{{ l.name }}</h5>
+
+<p>Email: {{ l.email }}</p>
+<p>Specialization: {{ l.specialization }}</p>
+<p>Experience: {{ l.experience }} years</p>
+
+<p>
+Status:
+{% if l.approved == 1 %}
+<span class="badge bg-success">Approved</span>
+{% elif l.approved == 0 %}
+<span class="badge bg-warning text-dark">Pending</span>
+{% endif %}
+</p>
+
+<p>
+Account:
+{% if l.is_active == 1 %}
+<span class="badge bg-success">Active</span>
+{% else %}
+<span class="badge bg-danger">Inactive</span>
+{% endif %}
+</p>
+
+{% if l.is_active == 1 %}
+<a href="/deactivate-user/{{ l.user_id }}"
+   class="btn btn-outline-danger w-100">
+   Deactivate
+</a>
+{% else %}
+<a href="/activate-user/{{ l.user_id }}"
+   class="btn btn-outline-success w-100">
+   Activate
+</a>
+{% endif %}
+
+</div>
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

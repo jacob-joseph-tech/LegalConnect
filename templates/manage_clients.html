@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">Manage Clients</h2>
+
+<div class="row">
+{% for c in clients %}
+<div class="col-md-6 mb-3">
+<div class="card p-4">
+
+<h5>{{ c.name }}</h5>
+<p>Email: {{ c.email }}</p>
+
+<p>
+Account:
+{% if c.is_active == 1 %}
+<span class="badge bg-success">Active</span>
+{% else %}
+<span class="badge bg-danger">Inactive</span>
+{% endif %}
+</p>
+
+{% if c.is_active == 1 %}
+<a href="/deactivate-user/{{ c.user_id }}"
+   class="btn btn-outline-danger w-100">
+   Deactivate
+</a>
+{% else %}
+<a href="/activate-user/{{ c.user_id }}"
+   class="btn btn-outline-success w-100">
+   Activate
+</a>
+{% endif %}
+
+</div>
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

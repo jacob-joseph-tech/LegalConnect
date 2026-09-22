@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% set full_page = True %}
+
+{% block content %}
+
+<style>
+
+.login-page{
+    min-height:100vh;
+
+    background:
+    linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+    url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1920&auto=format&fit=crop');
+
+    background-size:cover;
+    background-position:center;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+.login-card{
+    width:100%;
+    max-width:450px;
+
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(14px);
+
+    border-radius:24px;
+    padding:40px;
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,0.2);
+}
+
+.form-control{
+    height:52px;
+    border-radius:12px;
+    margin-bottom:16px;
+}
+
+</style>
+
+<div class="login-page">
+
+<div class="login-card">
+
+<h1 class="text-center fw-bold mb-2">
+Client Registration
+</h1>
+
+<p class="text-center text-light mb-4">
+Create your legal account
+</p>
+
+{% if error %}
+<div class="alert alert-danger">
+{{ error }}
+</div>
+{% endif %}
+
+<form method="POST" autocomplete="off">
+
+<input
+class="form-control"
+name="name"
+placeholder="Full Name"
+required
+>
+
+<input
+class="form-control mb-2"
+name="email"
+placeholder="Email"
+autocomplete="off"
+required>
+
+<input
+class="form-control mb-2"
+type="password"
+name="password"
+placeholder="Password"
+autocomplete="new-password"
+required>
+
+<input
+type="password"
+class="form-control"
+name="confirm_password"
+placeholder="Confirm Password"
+required
+>
+
+<button class="btn btn-primary w-100">
+Register
+</button>
+
+</form>
+
+<div class="mt-4 text-center">
+
+<p>Already have an account?</p>
+
+<a href="/login/client"
+class="btn btn-outline-light w-100">
+Login
+</a>
+
+</div>
+
+</div>
+</div>
+
+{% endblock %}

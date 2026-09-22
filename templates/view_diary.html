@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+<h3>{{ diary.title }}</h3>
+<p>{{ diary.description }}</p>
+
+<hr>
+
+<h5>Media</h5>
+
+{% for m in media %}
+
+<div class="mb-3">
+
+{% if m.file_type == "image" %}
+<img src="/uploads/{{ m.file_name }}" style="max-width:300px;">
+
+{% elif m.file_type == "video" %}
+<video controls width="300">
+<source src="/uploads/{{ m.file_name }}">
+</video>
+
+{% elif m.file_type == "audio" %}
+<audio controls>
+<source src="/uploads/{{ m.file_name }}">
+</audio>
+
+{% else %}
+<a href="/uploads/{{ m.file_name }}" target="_blank">
+View Document
+</a>
+{% endif %}
+
+<br>
+
+{% if m.can_download == 1 %}
+<a href="/uploads/{{ m.file_name }}" download class="btn btn-sm btn-success mt-2">
+Download
+</a>
+{% else %}
+<p class="text-danger">Download Restricted</p>
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<p class="text-muted">
+Some content may be restricted due to confidentiality.
+</p>
+
+{% endblock %}

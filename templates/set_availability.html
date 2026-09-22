@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="col-md-6 mx-auto mt-5">
+<div class="card p-4">
+
+<h3 class="mb-4">Set Availability</h3>
+
+<form method="POST">
+
+<label class="form-label">Day</label>
+<select name="day" class="form-select mb-3">
+<option>Monday</option>
+<option>Tuesday</option>
+<option>Wednesday</option>
+<option>Thursday</option>
+<option>Friday</option>
+<option>Saturday</option>
+<option>Sunday</option>
+</select>
+
+<label class="form-label">Start Time</label>
+<input type="time" name="start" class="form-control mb-3" required>
+
+<label class="form-label">End Time</label>
+<input type="time" name="end" class="form-control mb-3" required>
+
+<button class="btn btn-primary w-100">
+Save Availability
+</button>
+
+</form>
+
+</div>
+</div>
+
+{% endblock %}

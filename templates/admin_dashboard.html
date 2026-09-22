@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<h4>Lawyer Applications</h4>
+
+<div class="row">
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Total Applications</h6> 
+<h3>{{ total_applications }}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Approved Lawyers</h6>
+<h3>{{ approved_lawyers }}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Pending Approval</h6>
+<h3>{{ pending_lawyers }}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Rejected Lawyers</h6>
+<h3>{{ rejected_lawyers }}</h3>
+</div>
+</div>
+
+<h4>Lawyer Accounts</h4>
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Active Lawyers</h6>
+<h3>{{ active_lawyers }}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Deactivated Lawyers</h6>
+<h3>{{ deactivated_lawyers }}</h3>
+</div>
+</div>
+
+<br>
+<h4>Client Accounts</h4>
+
+<div class="row">
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Total Clients</h6>
+<h3>{{ total_clients }}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Active Clients</h6>
+<h3>{{ active_clients }}</h3>
+</div>
+</div>
+
+<h4>Case Statistics</h4>
+
+<div class="col-md-3">
+<div class="card p-3 text-center">
+<h6>Total Cases</h6>
+<h3>{{ total_cases }}</h3>
+</div>
+</div>
+
+
+</div>
+
+<br>
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="card p-3 text-center">
+<h6>Open Cases</h6>
+<h3>{{ open_cases }}</h3>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-3 text-center">
+<h6>In Progress</h6>
+<h3>{{ progress_cases }}</h3>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-3 text-center">
+<h6>Closed Cases</h6>
+<h3>{{ closed_cases }}</h3>
+</div>
+</div>
+
+</div>
+
+<hr>
+
+<h4 class="mt-4">System Charts</h4>
+
+<div class="row">
+
+<div class="col-md-6">
+<canvas id="lawyerChart"></canvas>
+</div>
+
+<div class="col-md-6">
+<canvas id="caseChart"></canvas>
+</div>
+
+</div>
+
+<h3 class="mt-5">Recent Activity</h3>
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Latest Lawyers</h5>
+
+<ul class="list-group">
+{% for l in recent_lawyers %}
+<li class="list-group-item">
+{{ l.name }} ({{ l.specialization }})
+</li>
+{% endfor %}
+</ul>
+
+</div>
+</div>
+
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Latest Clients</h5>
+
+<ul class="list-group">
+{% for c in recent_clients %}
+<li class="list-group-item">
+{{ c.name }}
+</li>
+{% endfor %}
+</ul>
+
+</div>
+</div>
+
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Latest Cases</h5>
+
+<ul class="list-group">
+{% for case in recent_cases %}
+<li class="list-group-item">
+{{ case.title }} ({{ case.status }})
+</li>
+{% endfor %}
+</ul>
+
+</div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+new Chart(document.getElementById("lawyerChart"), {
+    type: "doughnut",
+    data: {
+        labels: ["Approved", "Pending", "Rejected", ],
+        datasets: [{
+            data: [
+                {{ approved_lawyers }},
+                {{ pending_lawyers }},
+                {{ rejected_lawyers }}
+                
+
+                    
+            ]
+        }]
+    }
+})
+
+new Chart(document.getElementById("caseChart"), {
+    type: "bar",
+    data: {
+        labels: ["Open", "In Progress", "Closed"],
+        datasets: [{
+            label: "Cases",
+            data: [
+                {{ open_cases }},
+                {{ progress_cases }},
+                {{ closed_cases }}
+            ]
+        }]
+    }
+})
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="col-md-6 mx-auto mt-5">
+<div class="card p-4">
+
+<h3 class="mb-4">Book Appointment</h3>
+
+<form method="POST">
+
+<label>Case Title</label>
+<input name="title" class="form-control mb-3" required>
+
+<label>Description</label>
+<textarea name="description" class="form-control mb-3" required></textarea>
+
+<label>Appointment Type</label>
+
+<select name="meeting_type" class="form-select mb-3" required>
+<option value="">Select Type</option>
+<option value="online">Online Consultation</option>
+<option value="offline">Office Visit</option>
+</select>
+
+<label>Select Date</label>
+<input type="date" name="date" class="form-control mb-3" required>
+
+<label>Select Time Slot</label>
+
+<input type="hidden" name="time" id="selectedTime">
+
+<div id="slotContainer" class="d-flex flex-wrap gap-2 mb-3"></div>
+
+
+<button class="btn btn-primary w-100">
+Request Appointment
+</button>
+
+</form>
+
+<script>
+
+const dateInput = document.querySelector("input[name='date']");
+const slotContainer = document.getElementById("slotContainer");
+const selectedTime = document.getElementById("selectedTime");
+
+const today = new Date().toISOString().split("T")[0];
+dateInput.min = today;
+
+
+const availability = {{ availability|tojson }};
+const booked = {{ booked_slots|tojson }};
+const availableDays = availability.map(a => a.day_of_week);
+
+dateInput.addEventListener("change", function(){
+
+    slotContainer.innerHTML = "";
+    selectedTime.value = "";
+
+    const selectedDate = new Date(this.value);
+    const dayName = selectedDate.toLocaleDateString("en-US",{weekday:"long"});
+
+    if(!availableDays.includes(dayName)){
+
+    slotContainer.innerHTML =
+    "<p class='text-danger'>Lawyer is not available on this day.</p>";
+
+    return;
+}
+
+    availability.forEach(slot => {
+
+        if(slot.day_of_week === dayName){
+
+            let start = slot.start_time.split(":");
+            let end = slot.end_time.split(":");
+
+            let startMinutes = parseInt(start[0])*60 + parseInt(start[1]);
+            let endMinutes = parseInt(end[0])*60 + parseInt(end[1]);
+
+            for(let t = startMinutes; t < endMinutes; t += 30){
+
+                let hour = Math.floor(t/60);
+                let min = t%60;
+
+                let time = String(hour).padStart(2,'0') + ":" + String(min).padStart(2,'0');
+
+                let alreadyBooked = booked.some(b =>
+                    b.appointment_date === dateInput.value &&
+                    b.appointment_time === time
+                );
+
+                if(!alreadyBooked){
+
+                    let btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "btn btn-outline-primary";
+                    btn.textContent = time;
+
+                    btn.onclick = () => {
+
+                        document.querySelectorAll("#slotContainer button")
+                        .forEach(b => b.classList.remove("btn-primary"));
+
+                        btn.classList.remove("btn-outline-primary");
+                        btn.classList.add("btn-primary");
+
+                        selectedTime.value = time;
+                    };
+
+                    slotContainer.appendChild(btn);
+                }
+
+            }
+
+        }
+
+    });
+
+});
+
+</script>
+
+
+
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body {
+    background: #f5f7fb;
+}
+
+.profile-card {
+    border-radius: 18px;
+}
+
+.review-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+</style>
+
+<div class="col-md-8 mx-auto mt-4">
+
+<!-- ===== TOP SECTION ===== -->
+<div class="card profile-card p-4 mb-4">
+
+<h3 class="fw-bold mb-2">
+{{ lawyer.name }}
+
+{% if lawyer.approved %}
+<span class="badge bg-success ms-2">Verified</span>
+{% endif %}
+</h3>
+
+<p class="text-muted mb-1">
+{{ lawyer.specialization }} Lawyer
+</p>
+
+{% if avg_rating %}
+<p class="mb-0">⭐ {{ "%.1f"|format(avg_rating) }} / 5</p>
+{% else %}
+<p class="text-muted mb-0">No ratings yet</p>
+{% endif %}
+
+</div>
+
+<!-- ===== DETAILS ===== -->
+<div class="card profile-card p-4 mb-4">
+
+<h5 class="fw-semibold mb-3">Professional Details</h5>
+
+<div class="row">
+
+<div class="col-md-6">
+<p><strong>Experience:</strong> {{ lawyer.experience }} years</p>
+</div>
+
+<div class="col-md-6">
+<p><strong>Consultation Fee:</strong> ₹ {{ lawyer.consultation_fee }}</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- ===== AVAILABILITY ===== -->
+<div class="card profile-card p-4 mb-4">
+
+<h5 class="fw-semibold mb-3">Available Time</h5>
+
+{% if availability %}
+{% for slot in availability %}
+<div class="d-flex justify-content-between border-bottom py-2">
+<strong>{{ slot.day_of_week }}</strong>
+<span>{{ slot.start_time }} – {{ slot.end_time }}</span>
+</div>
+{% endfor %}
+{% else %}
+<p class="text-muted">No availability set.</p>
+{% endif %}
+
+</div>
+
+<!-- ===== REVIEWS ===== -->
+<div class="card profile-card p-4 mb-4">
+
+<h5 class="fw-semibold mb-3">Client Reviews</h5>
+
+{% if reviews|length == 0 %}
+<p class="text-muted">No reviews yet.</p>
+{% endif %}
+
+{% for r in reviews %}
+<div class="review-card p-3 mb-3">
+
+<strong>{{ r.name }}</strong>
+
+<p class="mb-1">⭐ {{ r.rating }}/5</p>
+
+<p class="mb-0 text-muted">{{ r.comment }}</p>
+
+</div>
+{% endfor %}
+
+</div>
+
+<!-- ===== REVIEW FORM ===== -->
+{% if session.get("role") == "client" and can_review %}
+<div class="card profile-card p-4 mb-4">
+
+<h5 class="fw-semibold mb-3">Leave a Review</h5>
+
+<form method="POST" action="/submit-review/{{ lawyer.id }}">
+
+<select name="rating" class="form-select mb-2" required>
+<option value="">Select Rating</option>
+<option value="5">⭐⭐⭐⭐⭐ (5)</option>
+<option value="4">⭐⭐⭐⭐ (4)</option>
+<option value="3">⭐⭐⭐ (3)</option>
+<option value="2">⭐⭐ (2)</option>
+<option value="1">⭐ (1)</option>
+</select>
+
+<textarea name="comment"
+          class="form-control mb-2"
+          placeholder="Write your review..."
+          required></textarea>
+
+<button class="btn btn-dark w-100">
+Submit Review
+</button>
+
+</form>
+
+</div>
+{% endif %}
+
+<!-- ===== ACTIONS ===== -->
+<div class="card profile-card p-4 text-center">
+
+<a href="/book-appointment/{{ lawyer.id }}"
+   class="btn btn-primary w-100 mb-2">
+Book Appointment
+</a>
+
+<a href="/lawyer-diaries/{{ lawyer.id }}"
+   class="btn btn-outline-dark w-100">
+View Case Diaries
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

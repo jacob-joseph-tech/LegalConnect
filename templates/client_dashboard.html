@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body {
+    background: #f5f7fb;
+}
+
+/* ---------- CARDS ---------- */
+.dashboard-card {
+    border-radius: 18px;
+    border: none;
+    transition: 0.25s ease;
+    background: white;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* ---------- KPI ---------- */
+.kpi-card h2 {
+    font-weight: 700;
+}
+
+/* ---------- CASE ---------- */
+.case-title {
+    font-weight: 600;
+}
+
+.case-meta {
+    font-size: 13px;
+    color: #888;
+}
+
+.case-desc {
+    font-size: 14px;
+    color: #555;
+}
+
+.chat-btn {
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* ---------- FILTER TABS ---------- */
+.filter-tabs button {
+    border-radius: 10px;
+}
+
+/* ---------- EMPTY ---------- */
+.empty-state {
+    text-align: center;
+    color: #888;
+    margin-top: 40px;
+}
+</style>
+
+<!-- ===== HEADER ===== -->
+<div class="mb-4">
+    <h2 class="fw-bold">Dashboard</h2>
+    <p class="text-muted mb-0">
+        Track your legal cases and activity
+    </p>
+</div>
+
+<!-- ===== KPI ===== -->
+<div class="row mb-4">
+
+<div class="col-md-4">
+<div class="card dashboard-card kpi-card p-4 text-center">
+<h6 class="text-muted">Total Cases</h6>
+<h2>{{ cases|length }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card dashboard-card kpi-card p-4 text-center border-primary">
+<h6 class="text-muted">Open</h6>
+<h2 class="text-primary">
+{{ cases | selectattr("status","equalto","Open") | list | length }}
+</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card dashboard-card kpi-card p-4 text-center">
+<h6 class="text-muted">In Progress</h6>
+<h2 class="text-warning">
+{{ cases | selectattr("status","equalto","In Progress") | list | length }}
+</h2>
+</div>
+</div>
+
+</div>
+
+<!-- ===== FILTER TABS ===== -->
+<div class="mb-3 filter-tabs">
+    <button class="btn btn-outline-dark btn-sm" onclick="filterCases('all')">All</button>
+    <button class="btn btn-outline-primary btn-sm" onclick="filterCases('Open')">Open</button>
+    <button class="btn btn-outline-warning btn-sm" onclick="filterCases('In Progress')">In Progress</button>
+    <button class="btn btn-outline-success btn-sm" onclick="filterCases('Closed')">Closed</button>
+</div>
+
+<!-- ===== CASES ===== -->
+{% if cases %}
+
+<div class="row" id="caseContainer">
+
+{% for c in cases %}
+<div class="col-md-6 mb-4 case-item" data-status="{{ c.status }}">
+
+<div class="card dashboard-card p-4 h-100 d-flex flex-column">
+
+<!-- Title + Status -->
+<div class="d-flex justify-content-between align-items-center">
+    <h5 class="case-title mb-0">{{ c.title }}</h5>
+
+    <span class="badge 
+    {% if c.status=='Open' %} bg-primary
+    {% elif c.status=='In Progress' %} bg-warning text-dark
+    {% else %} bg-success {% endif %}">
+    {{ c.status }}
+    </span>
+</div>
+
+<!-- Meta -->
+<p class="case-meta mt-1">
+    Case ID: {{ c.id }}
+</p>
+
+<!-- Progress -->
+<div class="progress mt-2" style="height:8px;">
+  <div class="progress-bar 
+  {% if c.status=='Open' %} bg-primary
+  {% elif c.status=='In Progress' %} bg-warning
+  {% else %} bg-success {% endif %}"
+  style="
+  width:
+  {% if c.status=='Open' %}30%
+  {% elif c.status=='In Progress' %}65%
+  {% else %}100%
+  {% endif %}
+  ">
+  </div>
+</div>
+
+<!-- Description -->
+<p class="case-desc mt-3">
+{{ c.description[:120] }}{% if c.description|length > 120 %}...{% endif %}
+</p>
+
+<!-- Action -->
+<a href="/case-chat/{{ c.id }}" 
+class="btn btn-primary chat-btn w-100 mt-auto">
+💬 Chat with Lawyer
+</a>
+
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+    <h5 class="fw-semibold">No cases yet</h5>
+    <p>Find a lawyer and start your first case.</p>
+
+    <a href="search-lawyers" class="btn btn-primary mt-2">
+        Find Lawyer
+    </a>
+</div>
+
+{% endif %}
+
+<!-- ===== FILTER SCRIPT ===== -->
+<script>
+function filterCases(status) {
+    const items = document.querySelectorAll(".case-item");
+
+    items.forEach(item => {
+        if (status === "all" || item.dataset.status === status) {
+            item.style.display = "block";
+        } else {
+            item.style.display = "none";
+        }
+    });
+}
+</script>
+
+{% endblock %}

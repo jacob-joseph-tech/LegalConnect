@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body {
+    background: #f5f7fb;
+}
+
+/* HEADER */
+.chat-header {
+    margin-bottom: 15px;
+}
+
+/* CHAT BOX */
+.chat-box {
+    height: 500px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* MESSAGE BUBBLE */
+.message {
+    max-width: 65%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    position: relative;
+}
+
+/* CLIENT (RIGHT) */
+.client {
+    background: #0d6efd;
+    color: white;
+    align-self: flex-end;
+}
+
+/* LAWYER (LEFT) */
+.lawyer {
+    background: #e9ecef;
+    align-self: flex-start;
+}
+
+/* TIME */
+.msg-time {
+    font-size: 11px;
+    margin-top: 4px;
+    opacity: 0.7;
+}
+
+/* INPUT AREA */
+.chat-input {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+</style>
+
+<!-- HEADER -->
+<div class="chat-header">
+    <h3 class="fw-bold">Case Chat</h3>
+    <p class="text-muted mb-0">Communicate with your lawyer</p>
+</div>
+
+<!-- CHAT AREA -->
+<div class="chat-box" id="chatBox">
+
+{% for m in messages %}
+<div class="message 
+{% if m.sender_role == 'client' %} client 
+{% else %} lawyer {% endif %}">
+
+    {{ m.message }}
+
+    <div class="msg-time">
+        {{ m.timestamp }}
+    </div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<!-- INPUT -->
+<form method="POST" class="chat-input">
+    <input type="text" name="message" placeholder="Type your message..." required>
+    <button class="btn btn-primary">Send</button>
+</form>
+
+<!-- AUTO SCROLL -->
+<script>
+const chatBox = document.getElementById("chatBox");
+chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+{% endblock %}

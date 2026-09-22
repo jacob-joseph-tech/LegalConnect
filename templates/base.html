@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LegalConnect</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body{
+    background:#f5f7fb;
+}
+
+.sidebar{
+    width:240px;
+    height:100vh;
+    background:linear-gradient(180deg,#0f172a,#020617);
+    position:fixed;
+    padding:20px 16px;
+}
+
+.sidebar h4{
+    color:white;
+    margin-bottom:10px;
+}
+
+.sidebar p{
+    font-size:13px;
+    color:#94a3b8;
+    margin-bottom:18px;
+}
+
+.sidebar a{
+    display:flex;
+    align-items:center;
+    color:#cbd5e1;
+    padding:10px 12px;
+    border-radius:10px;
+    text-decoration:none;
+    margin-bottom:6px;
+    transition:.2s;
+}
+
+.sidebar a:hover{
+    background:#1e293b;
+    color:white;
+}
+
+.main{
+    margin-left:260px;
+    padding:30px;
+}
+
+.card{
+    border:none;
+    border-radius:14px;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+}
+
+.badge{
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+.ai-chat-container{
+position:fixed;
+bottom:90px;
+right:20px;
+width:350px;
+height:450px;
+background:white;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+display:none;
+flex-direction:column;
+}
+
+.ai-header{
+background:#0d6efd;
+color:white;
+padding:10px;
+display:flex;
+justify-content:space-between;
+}
+
+.ai-messages{
+flex:1;
+padding:10px;
+overflow-y:auto;
+}
+
+.ai-input{
+padding:10px;
+display:flex;
+flex-direction:column;
+}
+
+.ai-input textarea{
+height:60px;
+margin-bottom:5px;
+}
+
+.ai-float-btn{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#0d6efd;
+color:white;
+border:none;
+border-radius:50%;
+width:60px;
+height:60px;
+font-size:25px;
+}
+
+</style>
+</head>
+
+<body>
+
+{% if session.get('user_id') %}
+<div class="sidebar">
+<h4>LegalConnect</h4>
+<div class="mt-3 text-light">
+
+    <div class="small text-secondary">
+        Logged in as
+    </div>
+
+    <div class="fw-bold">
+        {{ session.name }}
+    </div>
+
+</div>
+
+{% if session.role == "client" %}
+<a href="/dashboard">Dashboard</a>
+<a href="/search-lawyers">Find Lawyer</a>
+<a href="/my-appointments">My Appointments</a>
+<a href="/submit-complaint">Raise Complaint</a>
+<a href="/notifications" style="position:relative;">
+Notifications
+
+{% if notif_count and notif_count > 0 %}
+<span style="
+position:absolute;
+top:-5px;
+right:-10px;
+background:red;
+color:white;
+border-radius:50%;
+padding:2px 6px;
+font-size:12px;">
+{{ notif_count }}
+</span>
+{% endif %}
+
+</a>
+
+<a href="/my-profile">My Profile</a>
+
+{% elif session.role == "lawyer" %}
+<a href="/lawyer-dashboard">My Cases</a>
+<a href="/lawyer-appointments">Appointments</a>
+<a href="/submit-complaint">Raise Complaint</a>
+<a href="/lawyer-calendar">Calendar</a>
+<li>
+    <a href="/my-diaries">
+        My Diaries
+    </a>
+</li>
+<a href="/notifications" style="position:relative;">
+Notifications
+
+{% if notif_count and notif_count > 0 %}
+<span style="
+position:absolute;
+top:-5px;
+right:-10px;
+background:red;
+color:white;
+border-radius:50%;
+padding:2px 6px;
+font-size:12px;">
+{{ notif_count }}
+</span>
+{% endif %}
+
+</a>
+
+<a href="/my-profile">My Profile</a>
+
+{% elif session.role == "admin" %}
+<a href="/dashboard">Dashboard</a>
+<a href="/view-cases">All Cases</a>
+<a href="/approve-lawyers">Approve Lawyers</a>
+<a href="/manage-lawyers">Manage Lawyers</a>
+<a href="/manage-clients">Manage Clients</a>
+<a href="/admin-complaints">Complaints</a>
+{% endif %}
+
+<a href="/logout">Logout</a>
+</div>
+{% endif %}
+
+{% if not full_page %}
+<div class="main">
+{% endif %}
+
+{% block content %}{% endblock %}
+
+{% if not full_page %}
+</div>
+{% endif %}
+
+<script>
+document.getElementById("botBtn")?.addEventListener("click", () => {
+  const box = document.getElementById("botBox");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+});
+
+function sendBot(){
+  const input = document.getElementById("botInput");
+  const area = document.getElementById("chatArea");
+
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  area.innerHTML += `<div><b>You:</b> ${msg}</div>`;
+
+  fetch("/ipc-bot",{
+    method:"POST",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:"description="+encodeURIComponent(msg)
+  })
+  .then(res => res.text())
+  .then(reply => {
+    area.innerHTML += `<div class="text-success"><b>Bot:</b> ${reply}</div>`;
+    area.scrollTop = area.scrollHeight;
+  });
+
+  input.value = "";
+}
+
+function toggleAI(){
+const chat = document.getElementById("aiChat");
+chat.style.display = chat.style.display === "flex" ? "none" : "flex";
+}
+
+async function sendMessage(){
+
+let input = document.getElementById("userInput");
+let message = input.value;
+
+if(message.trim() === "") return;
+
+let chatBox = document.getElementById("chatMessages");
+
+chatBox.innerHTML += "<p><b>You:</b> "+message+"</p>";
+
+input.value="";
+
+let formData = new FormData();
+formData.append("description",message);
+
+let response = await fetch("/ipc-bot",{
+method:"POST",
+body:formData
+});
+
+let data = await response.text();
+
+chatBox.innerHTML += `
+<div style="background:#f5f5f5;padding:10px;border-radius:8px;margin:5px 0;">
+<b>⚖ AI Legal Assistant</b><br>
+${data.replace(/\n/g,"<br>")}
+</div>
+`;
+
+chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+</script>
+
+<div id="aiChat" class="ai-chat-container">
+
+<div class="ai-header">
+⚖ Legal AI Assistant
+<span onclick="toggleAI()">✖</span>
+</div>
+
+<div id="chatMessages" class="ai-messages"></div>
+
+<div class="ai-input">
+<textarea id="userInput" placeholder="Describe your legal issue..."></textarea>
+<button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<button class="ai-float-btn" onclick="toggleAI()">⚖</button>
+
+</body>
+</html>

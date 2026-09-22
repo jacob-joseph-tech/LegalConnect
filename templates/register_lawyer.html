@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% set full_page = True %}
+
+{% block content %}
+
+<style>
+
+.login-page{
+    min-height:100vh;
+
+    background:
+    linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+    url('https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=1920&auto=format&fit=crop');
+
+    background-size:cover;
+    background-position:center;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+.login-card{
+    width:100%;
+    max-width:500px;
+
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(14px);
+
+    border-radius:24px;
+    padding:40px;
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,0.2);
+}
+
+.form-control, .form-select{
+    height:52px;
+    border-radius:12px;
+    margin-bottom:14px;
+}
+
+</style>
+
+<div class="login-page">
+
+<div class="login-card">
+
+<h1 class="text-center fw-bold mb-2">
+Lawyer Registration
+</h1>
+
+<p class="text-center text-light mb-3">
+Submit details for verification
+</p>
+
+{% if error %}
+<div class="alert alert-danger text-center">
+{{ error }}
+</div>
+{% endif %}
+
+<form method="POST"
+      enctype="multipart/form-data"
+      autocomplete="off">
+
+<input class="form-control" name="name" placeholder="Full Name" required>
+
+<input
+class="form-control mb-2"
+name="email"
+placeholder="Email"
+autocomplete="off"
+required>
+
+<input
+class="form-control mb-2"
+type="password"
+name="password"
+placeholder="Password"
+autocomplete="new-password"
+required>
+
+<input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required>
+
+<select class="form-select" name="specialization" required>
+<option value="">Specialization</option>
+<option>Criminal</option>
+<option>Family</option>
+<option>Civil</option>
+<option>Corporate</option>
+<option>Cyber Law</option>
+</select>
+
+<input class="form-control" name="experience" placeholder="Years of Experience" required>
+
+<input class="form-control" name="fee" placeholder="Consultation Fee" required>
+
+<input class="form-control" name="license_number" placeholder="Bar Council License No" required>
+
+<input type="file" class="form-control" name="verification_file" required>
+
+<button class="btn btn-success w-100 mt-2">
+Submit for Approval
+</button>
+
+</form>
+
+<div class="mt-4 text-center">
+
+<p>Already registered?</p>
+
+<a href="/login/lawyer" class="btn btn-outline-light w-100">
+Login
+</a>
+
+</div>
+
+<p class="text-center text-muted mt-3" style="font-size: 14px;">
+Account activates after admin approval
+</p>
+
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+
+                <h2 class="mb-4 text-center">
+                    Map IPC Sections
+                </h2>
+
+                <p class="text-muted text-center mb-4">
+                    Select applicable IPC sections for this case
+                </p>
+
+                <form method="POST">
+
+                    <div class="row">
+
+                        {% for ipc in ipc_sections %}
+
+                        <div class="col-md-6 mb-3">
+
+                            <div class="border rounded-3 p-3 h-100">
+
+                                <div class="form-check">
+
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        name="ipc_ids"
+                                        value="{{ ipc.id }}"
+                                        id="ipc{{ ipc.id }}"
+                                    >
+
+                                    <label
+                                        class="form-check-label"
+                                        for="ipc{{ ipc.id }}"
+                                    >
+
+                                        <strong>
+                                            {{ ipc.section_code }}
+                                        </strong>
+
+                                        <br>
+
+                                        <span class="text-muted">
+                                            {{ ipc.section_title }}
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <button
+                        class="btn btn-dark w-100 mt-3 py-2"
+                    >
+                        Save IPC Mapping
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

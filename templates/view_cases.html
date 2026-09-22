@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">All Cases</h2>
+
+{% for c in cases %}
+<div class="card p-4 mb-3">
+
+<h5>{{ c.title }}</h5>
+
+<p class="mb-1">
+<strong>Client:</strong> {{ c.client_name }}
+</p>
+
+<p class="mb-1">
+<strong>Lawyer:</strong>
+{% if c.lawyer_name %}
+    <span class="badge bg-success">{{ c.lawyer_name }}</span>
+{% else %}
+    <span class="badge bg-warning text-dark">Pending Assignment</span>
+{% endif %}
+</p>
+
+<p class="mb-2">
+<strong>Status:</strong> {{ c.status }}
+</p>
+
+<div class="d-flex gap-3">
+
+{% if not c.lawyer_name %}
+<a class="btn btn-sm btn-outline-primary"
+   href="/assign-case/{{ c.id }}">
+   Assign Lawyer
+</a>
+{% endif %}
+
+
+</div>
+
+</div>
+{% endfor %}
+
+{% endblock %}

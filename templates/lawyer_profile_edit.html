@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+<h2>My Profile</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+{% if user.profile_photo %}
+<img src="/uploads/{{ user.profile_photo }}" 
+     style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+{% else %}
+<img src="https://via.placeholder.com/120"
+     style="width:120px;height:120px;border-radius:50%;">
+{% endif %}
+
+<label>Name</label>
+<input name="name" value="{{ user.name }}" class="form-control mb-3">
+
+<label>Email</label>
+<input value="{{ user.email }}" class="form-control mb-3" disabled>
+
+<label>Specialization</label>
+<input name="specialization" value="{{ lawyer.specialization }}" class="form-control mb-3">
+
+<label>Experience (years)</label>
+<input name="experience" value="{{ lawyer.experience }}" class="form-control mb-3">
+
+<label>Consultation Fee</label>
+<input name="fee" value="{{ lawyer.consultation_fee }}" class="form-control mb-3">
+
+<div class="mt-4">
+
+    <h5>Availability Schedule</h5>
+
+    <a href="/set-availability"
+       class="btn btn-dark mt-2">
+       Manage Availability
+    </a>
+
+</div>
+
+{% if availability %}
+
+<div class="mt-3">
+
+    {% for a in availability %}
+
+    <div class="card p-2 mb-2">
+
+        <strong>{{ a.day_of_week }}</strong><br>
+        {{ a.start_time }} - {{ a.end_time }}
+
+    </div>
+
+    <a href="/delete-availability/{{ a.id }}"
+   class="btn btn-sm btn-danger mt-2"
+   onclick="return confirm('Delete availability slot?')">
+   Delete
+</a>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+<label>Profile Photo</label>
+<input type="file" name="photo" class="form-control mb-3">
+
+<button class="btn btn-primary">
+Update Profile
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}

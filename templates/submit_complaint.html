@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">Raise a Complaint</h2>
+
+<div class="col-md-6">
+
+<form method="POST">
+
+<input type="text"
+       name="subject"
+       class="form-control mb-3"
+       placeholder="Complaint subject"
+       required>
+
+<textarea name="message"
+          class="form-control mb-3"
+          placeholder="Describe your issue"
+          rows="5"
+          required></textarea>
+
+<button class="btn btn-danger w-100">
+Submit Complaint
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}

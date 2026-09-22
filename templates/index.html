@@ -1,0 +1,173 @@
+{% set full_page = True %}
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+}
+
+.hero-section{
+    min-height:100vh;
+    width:100vw;
+
+    background:
+    linear-gradient(rgba(0,0,0,0.70), rgba(0,0,0,0.70)),
+    url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=1920&auto=format&fit=crop');
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:40px;
+}
+
+.glass-card{
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    border-radius:20px;
+
+    transition:0.3s;
+
+    color:white;
+}
+
+.glass-card:hover{
+    transform:translateY(-10px);
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+.role-btn{
+    border-radius:12px;
+
+    padding:12px;
+
+    font-weight:600;
+
+    font-size:1.05rem;
+}
+
+.main-title{
+    font-size:5rem;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+}
+
+.subtitle{
+    color:#e0e0e0;
+
+    font-size:1.2rem;
+}
+
+@media(max-width:768px){
+
+    .main-title{
+        font-size:3rem;
+    }
+
+    .hero-section{
+        padding:20px;
+    }
+
+}
+
+</style>
+
+<div class="hero-section">
+
+<div class="w-100 text-center text-white">
+
+<h1 class="main-title mb-3">
+LegalConnect
+</h1>
+
+<p class="subtitle mb-5">
+Smart Legal Management & Lawyer Consultation Platform
+</p>
+
+<div class="row justify-content-center g-4">
+
+<!-- CLIENT -->
+<div class="col-lg-3 col-md-6">
+
+<div class="glass-card p-4 h-100">
+
+<h2 class="fw-bold mb-4">
+Client
+</h2>
+
+<p class="mb-4">
+Book appointments, manage cases, chat with lawyers and track legal progress.
+</p>
+
+<a href="/login/client"
+class="btn btn-primary w-100 role-btn">
+Continue
+</a>
+
+</div>
+</div>
+
+<!-- LAWYER -->
+<div class="col-lg-3 col-md-6">
+
+<div class="glass-card p-4 h-100">
+
+<h2 class="fw-bold mb-4">
+Lawyer
+</h2>
+
+<p class="mb-4">
+Manage appointments, publish case diaries and work on assigned legal cases.
+</p>
+
+<a href="/login/lawyer"
+class="btn btn-success w-100 role-btn">
+Continue
+</a>
+
+</div>
+</div>
+
+<!-- ADMIN -->
+<div class="col-lg-3 col-md-6">
+
+<div class="glass-card p-4 h-100">
+
+<h2 class="fw-bold mb-4">
+Admin
+</h2>
+
+<p class="mb-4">
+Monitor platform activities, verify lawyers and manage the legal ecosystem.
+</p>
+
+<a href="/login/admin"
+class="btn btn-dark w-100 role-btn">
+Continue
+</a>
+
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+{% endblock %}

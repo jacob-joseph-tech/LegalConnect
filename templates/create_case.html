@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create Case</h2>
+
+<form method="POST">
+    <input name="title" placeholder="Case Title">
+    <textarea name="description" placeholder="Case Description"></textarea>
+    <button>Create Case</button>
+</form>
+{% endblock %}

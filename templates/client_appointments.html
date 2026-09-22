@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">My Appointments</h2>
+
+{% for a in appointments %}
+<div class="card p-4 mb-3">
+
+<h5>{{ a.case_title }}</h5>
+
+<p class="text-muted">
+Lawyer: {{ a.lawyer_name }}
+</p>
+
+<p>
+Date: {{ a.appointment_date }} <br>
+Time: {{ a.appointment_time }}
+</p>
+
+<p>
+Meeting Type:
+<b>{{ a.meeting_type }}</b>
+</p>
+
+{% if a.meeting_link %}
+<p>
+Online Meeting Link:
+<a href="{{ a.meeting_link }}" target="_blank">
+{{ a.meeting_link }}
+</a>
+</p>
+{% endif %}
+
+{% if a.meeting_location %}
+<p>
+Office Address:
+{{ a.meeting_location }}
+</p>
+{% endif %}
+
+<span class="badge 
+{% if a.status=='Pending' %} bg-warning text-dark
+{% elif a.status=='Approved' %} bg-success
+{% else %} bg-danger {% endif %}
+">
+{{ a.status }}
+</span>
+
+</div>
+{% endfor %}
+
+{% if not appointments %}
+<p class="text-muted">No appointments yet.</p>
+{% endif %}
+
+{% endblock %}

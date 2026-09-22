@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>Edit Diary</h2>
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="title"
+            class="form-control mb-3"
+            value="{{ diary.title }}"
+            required
+        >
+
+        <textarea
+            name="description"
+            class="form-control mb-3"
+            rows="6"
+            required
+        >{{ diary.description }}</textarea>
+
+        <select
+            name="visibility"
+            class="form-control mb-3"
+        >
+
+            <option value="public"
+            {% if diary.visibility == "public" %}
+            selected
+            {% endif %}
+            >
+            Public
+            </option>
+
+            <option value="private"
+            {% if diary.visibility == "private" %}
+            selected
+            {% endif %}
+            >
+            Private
+            </option>
+
+        </select>
+
+        <button class="btn btn-dark">
+            Update Diary
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

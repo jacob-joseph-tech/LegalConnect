@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>My Diaries</h2>
+
+        <a href="/add-diary"
+           class="btn btn-dark">
+           Add Case Diary
+        </a>
+
+    </div>
+
+    <div class="row">
+
+        {% for d in diaries %}
+
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow-sm p-3 h-100">
+
+                <h4>{{ d.title }}</h4>
+
+                <p class="text-muted">
+                    {{ d.created_at }}
+                </p>
+
+                <p>
+                    {{ d.description[:150] }}...
+                </p>
+
+                <p>
+                    ⭐ {{ d.likes }} Likes
+                </p>
+
+                <p>
+
+                    {% if d.visibility == "public" %}
+
+                        <span class="badge bg-success">
+                            Public
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-dark">
+                            Private
+                        </span>
+
+                    {% endif %}
+
+                </p>
+
+                <a href="/diary/{{ d.id }}"
+                   class="btn btn-outline-primary">
+                   View Diary
+                </a>
+                <a href="/edit-diary/{{ d.id }}"
+                   class="btn btn-outline-dark">
+                   Edit Diary
+                </a>
+                <a href="/delete-diary/{{ d.id }}"
+                   class="btn btn-outline-danger"
+                   onclick="return confirm('Are you sure you want to delete this diary?');">
+                   Delete Diary 
+                </a>
+                
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

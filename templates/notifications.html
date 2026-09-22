@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Notifications</h3>
+
+<p class="text-muted">
+Recent system notifications
+</p>
+
+{% for n in notifications %}
+
+<div class="card p-3 mb-2
+{% if n.is_read == 0 %}
+border-primary bg-light
+{% endif %}
+">
+
+{{ n.message }}
+
+<br>
+
+<small class="text-muted">
+{{ n.created_at }}
+</small>
+
+{% if n.is_read == 0 %}
+<span class="badge bg-primary ms-2">New</span>
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+{% if not notifications %}
+<p>No notifications.</p>
+{% endif %}
+
+{% endblock %}

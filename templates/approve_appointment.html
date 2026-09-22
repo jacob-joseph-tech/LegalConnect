@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+<h3>Approve Appointment</h3>
+
+<p><b>Case:</b> {{ appointment.case_title }}</p>
+<p><b>Date:</b> {{ appointment.appointment_date }}</p>
+<p><b>Time:</b> {{ appointment.appointment_time }}</p>
+
+<form method="POST">
+
+<label>Meeting Type</label>
+<select name="meeting_type" id="type" class="form-control mb-3" required>
+<option value="">Select</option>
+<option value="online">Online</option>
+<option value="offline">Offline</option>
+</select>
+
+<div id="online_box" style="display:none;">
+<label>Meeting Link</label>
+<input type="text" name="meeting_link" class="form-control mb-3">
+</div>
+
+<div id="offline_box" style="display:none;">
+<label>Office Address</label>
+<textarea name="meeting_location" class="form-control mb-3"></textarea>
+</div>
+
+<button class="btn btn-success">
+Approve Appointment
+</button>
+
+</form>
+
+</div>
+
+<script>
+
+const type = document.getElementById("type");
+const online = document.getElementById("online_box");
+const offline = document.getElementById("offline_box");
+
+type.addEventListener("change", function(){
+
+online.style.display = "none";
+offline.style.display = "none";
+
+if(this.value === "online"){
+online.style.display = "block";
+}
+
+if(this.value === "offline"){
+offline.style.display = "block";
+}
+
+});
+
+</script>
+
+{% endblock %}

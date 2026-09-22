@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body {
+    background: #f5f7fb;
+}
+
+/* FILTER */
+.filter-card {
+    border-radius: 16px;
+}
+
+/* LAWYER CARD */
+.lawyer-card {
+    border-radius: 18px;
+    border: none;
+    transition: 0.25s ease;
+}
+
+.lawyer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+}
+
+.verified-badge {
+    font-size: 11px;
+    margin-left: 6px;
+}
+</style>
+
+<div class="row">
+
+<!-- ================= FILTER SIDEBAR ================= -->
+<div class="col-md-3">
+<div class="card filter-card p-3 shadow-sm">
+
+<h5 class="fw-bold">Filters</h5>
+
+<form method="GET">
+
+<label class="mt-2">Specialization</label>
+<select name="specialization" class="form-select mb-2">
+<option value="">All</option>
+<option {% if request.args.get('specialization') == 'Criminal' %}selected{% endif %}>Criminal</option>
+<option {% if request.args.get('specialization') == 'Family' %}selected{% endif %}>Family</option>
+<option {% if request.args.get('specialization') == 'Cyber Crime' %}selected{% endif %}>Cyber Crime</option>
+<option {% if request.args.get('specialization') == 'Civil' %}selected{% endif %}>Civil</option>
+<option {% if request.args.get('specialization') == 'Corporate' %}selected{% endif %}>Corporate</option>
+</select>
+
+<label class="mt-2">Minimum Rating</label>
+<select name="rating" class="form-select mb-2">
+<option value="">Any</option>
+<option value="4" {% if request.args.get('rating') == '4' %}selected{% endif %}>4★ & above</option>
+<option value="3" {% if request.args.get('rating') == '3' %}selected{% endif %}>3★ & above</option>
+</select>
+
+<label class="mt-2">Experience</label>
+<select name="experience" class="form-select mb-2">
+<option value="">Any</option>
+<option value="0-3" {% if request.args.get('experience') == '0-3' %}selected{% endif %}>0–3 years</option>
+<option value="3-7" {% if request.args.get('experience') == '3-7' %}selected{% endif %}>3–7 years</option>
+<option value="7+" {% if request.args.get('experience') == '7+' %}selected{% endif %}>7+ years</option>
+</select>
+
+<label class="mt-2">Consultation Fee</label>
+<select name="fee" class="form-select mb-2">
+<option value="">Any</option>
+<option value="0-500" {% if request.args.get('fee') == '0-500' %}selected{% endif %}>₹0–500</option>
+<option value="500-1500" {% if request.args.get('fee') == '500-1500' %}selected{% endif %}>₹500–1500</option>
+<option value="1500+" {% if request.args.get('fee') == '1500+' %}selected{% endif %}>₹1500+</option>
+</select>
+
+<label class="mt-2">Sort By</label>
+<select name="sort" class="form-select mb-3">
+<option value="">Default</option>
+<option value="rating" {% if request.args.get('sort') == 'rating' %}selected{% endif %}>Highest Rated</option>
+<option value="experience" {% if request.args.get('sort') == 'experience' %}selected{% endif %}>Most Experienced</option>
+<option value="fee_low" {% if request.args.get('sort') == 'fee_low' %}selected{% endif %}>Lowest Fee</option>
+</select>
+
+<button class="btn btn-dark w-100">Apply Filters</button>
+
+<a href="{{ url_for('search_lawyers') }}" class="btn btn-outline-secondary w-100 mt-2">
+Reset Filters
+</a>
+
+</form>
+</div>
+</div>
+
+<!-- ================= LAWYER RESULTS ================= -->
+<div class="col-md-9">
+
+<div class="mb-3">
+<h4 class="fw-bold">Available Lawyers</h4>
+<p class="text-muted mb-0">
+Showing {{ start }} – {{ end }} of {{ total }} lawyers
+</p>
+</div>
+
+{% if not lawyers %}
+<div class="text-center mt-5">
+    <h5>No lawyers found</h5>
+    <p class="text-muted">Try adjusting your filters</p>
+</div>
+{% endif %}
+
+<div class="row">
+{% for l in lawyers %}
+<div class="col-md-6 mb-4">
+
+<div class="card lawyer-card p-4">
+
+<div class="d-flex align-items-center mb-3">
+
+<img src="{{ l.profile_photo and '/uploads/' ~ l.profile_photo or url_for('static', filename='default-avatar.png') }}"
+     style="width:70px;height:70px;border-radius:50%;object-fit:cover;margin-right:15px;">
+
+<div>
+<h5 class="mb-0">
+{{ l.name }}
+
+{% if l.approved %}
+<span class="badge bg-success verified-badge">Verified</span>
+{% endif %}
+</h5>
+
+<small class="text-muted">{{ l.specialization }} Lawyer</small>
+</div>
+
+</div>
+
+<!-- Rating -->
+{% if l.avg_rating %}
+<div class="mb-2">
+⭐ {{ l.avg_rating }}
+<small class="text-muted">({{ l.review_count }} reviews)</small>
+</div>
+{% else %}
+<div class="mb-2 text-muted">No reviews yet</div>
+{% endif %}
+
+<!-- Info -->
+<div class="d-flex justify-content-between mb-2">
+<span>Experience</span>
+<strong>{{ l.experience }} yrs</strong>
+</div>
+
+<div class="d-flex justify-content-between mb-3">
+<span>Fee</span>
+<strong>₹{{ l.consultation_fee }}</strong>
+</div>
+
+<!-- Actions -->
+<a href="/lawyer/{{ l.id }}" class="btn btn-outline-dark w-100 mb-2">
+View Profile
+</a>
+
+<a href="/book-appointment/{{ l.id }}" class="btn btn-primary w-100">
+Book Appointment
+</a>
+
+</div>
+
+</div>
+{% endfor %}
+</div>
+
+</div>
+</div>
+
+<!-- ================= PAGINATION ================= -->
+<div class="mt-4 text-center">
+<nav>
+<ul class="pagination justify-content-center">
+
+{% set args = request.args.to_dict() %}
+
+{% if page > 1 %}
+    {% set _ = args.update({'page': page-1}) %}
+    <li class="page-item">
+        <a class="page-link" href="{{ url_for('search_lawyers', **args) }}">
+            Previous
+        </a>
+    </li>
+{% endif %}
+
+{% for p in range(1, total_pages + 1) %}
+    {% set args = request.args.to_dict() %}
+    {% set _ = args.update({'page': p}) %}
+    <li class="page-item {% if p == page %}active{% endif %}">
+        <a class="page-link" href="{{ url_for('search_lawyers', **args) }}">
+            {{ p }}
+        </a>
+    </li>
+{% endfor %}
+
+{% if page < total_pages %}
+    {% set args = request.args.to_dict() %}
+    {% set _ = args.update({'page': page+1}) %}
+    <li class="page-item">
+        <a class="page-link" href="{{ url_for('search_lawyers', **args) }}">
+            Next
+        </a>
+    </li>
+{% endif %}
+
+</ul>
+</nav>
+</div>
+
+{% endblock %}

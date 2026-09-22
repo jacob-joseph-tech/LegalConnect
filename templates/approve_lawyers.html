@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<h2 class="mb-4">Pending Lawyer Verifications</h2>
+
+{% if lawyers|length == 0 %}
+<div class="alert alert-success">No pending approvals</div>
+{% endif %}
+
+<div class="row">
+
+{% for l in lawyers %}
+<div class="col-md-6 mb-3">
+<div class="card p-4">
+
+<h5>{{ l.name }}</h5>
+
+{% if l.approved == 1 %}
+<span class="badge bg-success">Approved</span>
+{% elif l.rejection_reason %}
+<span class="badge bg-danger">Rejected</span>
+{% else %}
+<span class="badge bg-warning text-dark">Pending</span>
+{% endif %}
+<p class="mb-1"><b>Email:</b> {{ l.email }}</p>
+<p class="mb-1"><b>Specialization:</b> {{ l.specialization }}</p>
+<p class="mb-1"><b>Experience:</b> {{ l.experience }} years</p>
+<p class="mb-1"><b>License:</b> {{ l.license_number }}</p>
+
+{% if l.verification_file %}
+<a href="{{ url_for('uploaded_file', filename=l.verification_file) }}" target="_blank">
+View Uploaded Proof
+</a>
+{% else %}
+<span class="text-muted">No proof uploaded</span>
+{% endif %}
+<br>
+
+{% if l.approved == 0 and not l.rejection_reason %}
+
+<a href="/approve-lawyer/{{ l.id }}" class="btn btn-success w-100 mb-2">
+    Approve Lawyer
+</a>
+
+<a href="/deactivate-user/{{ l.user_id }}"
+   class="btn btn-sm btn-outline-danger mt-2">
+   Deactivate Account
+</a>
+
+<form action="/reject-lawyer/{{ l.id }}" method="POST" class="mt-2">
+    <textarea name="reason"
+        class="form-control mb-2"
+        placeholder="Reason for rejection"
+        required></textarea>
+
+    <button class="btn btn-danger w-100">
+        Reject Lawyer
+    </button>
+</form>
+
+{% endif %}
+
+</div>
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock %}
