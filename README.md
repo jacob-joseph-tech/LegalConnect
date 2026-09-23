@@ -23,6 +23,8 @@ LegalConnect/
 ├── uploads/
 ├── .gitignore
 └── README.md
+```
+
 Features
 Client
 Register and log in
