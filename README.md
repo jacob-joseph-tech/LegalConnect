@@ -6,6 +6,24 @@ Overview
 
 LegalConnect is a role-based legal consultation platform developed as a BCA final-year project. It allows clients to connect with lawyers, book appointments, manage legal cases, communicate securely, and receive legal assistance through an AI-powered IPC recommendation feature.
 
+## Project Structure
+
+```text
+LegalConnect/
+├── app.py
+├── models.py
+├── update_db.py
+├── check.py
+├── requirements.txt
+├── templates/
+│   ├── admin/
+│   ├── client/
+│   ├── lawyer/
+│   └── ...
+├── uploads/
+├── .gitignore
+└── README.md
+
 Features
 Client
 Register and log in
