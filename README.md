@@ -25,7 +25,7 @@ LegalConnect/
 └── README.md
 ```
 
-Features
+##Features
 Client
 Register and log in
 Search lawyers by specialization
