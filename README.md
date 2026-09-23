@@ -112,9 +112,9 @@ python app.py
 
 The following environment variables are required:
 
--`GEMINI_API_KEY` — Google Gemini API key
--`FLASK_SECRET_KEY` — Flask session secret
--`MAIL_USERNAME` — Email account used for sending messages
--`MAIL_PASSWORD` — Email app password
+- `GEMINI_API_KEY` — Google Gemini API key
+- `FLASK_SECRET_KEY` — Flask session secret
+- `MAIL_USERNAME` — Email account used for sending messages
+- `MAIL_PASSWORD` — Email app password
 
 
